@@ -1,9 +1,10 @@
-﻿namespace Oreru.Domain.Osu;
+﻿using Oreru.Domain.Storyboards;
+
+namespace Oreru.Osu;
 
 /// <summary>
 /// A storyboard stored the way osu! sees it.
-/// This object can be manipulated and serialized to a file
-/// to programmatically change a storyboard.
+/// This object can be used to programmatically change a storyboard.
 /// </summary>
 public class OsuStoryboard
 {
@@ -12,14 +13,21 @@ public class OsuStoryboard
     public List<OsuStoryboardObject> FailLayer { get; set; } = [];
     public List<OsuStoryboardObject> ForegroundLayer { get; set; } = [];
 
-    public List<OsuStoryboardObject> GetLayer(OsuStoryboardLayer layer)
+    public IEnumerable<OsuStoryboardObject> Objects => new List<OsuStoryboardObject>[] {
+        BackgroundLayer,
+        PassLayer,
+        FailLayer,
+        ForegroundLayer
+    }.SelectMany(x => x);
+
+    public List<OsuStoryboardObject> GetLayer(StoryboardLayer layer)
     {
         return layer switch
         {
-            OsuStoryboardLayer.Background => BackgroundLayer,
-            OsuStoryboardLayer.Fail => FailLayer,
-            OsuStoryboardLayer.Pass => PassLayer,
-            OsuStoryboardLayer.Foreground => ForegroundLayer,
+            StoryboardLayer.Background => BackgroundLayer,
+            StoryboardLayer.Fail => FailLayer,
+            StoryboardLayer.Pass => PassLayer,
+            StoryboardLayer.Foreground => ForegroundLayer,
             _ => throw new ArgumentException($"Invalid Storyboard Layer: {layer}")
         };
     }
@@ -36,7 +44,6 @@ public class OsuStoryboard
             AddObject(obj);
         }
     }
-
     public void RemoveObject(OsuStoryboardObject obj)
     {
         GetLayer(obj.Layer).Remove(obj);

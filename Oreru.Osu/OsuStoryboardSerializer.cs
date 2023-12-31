@@ -1,6 +1,8 @@
-﻿using System.Text;
+﻿using Oreru.Domain;
+using Oreru.Domain.Storyboards;
+using System.Text;
 
-namespace Oreru.Domain.Osu;
+namespace Oreru.Osu;
 
 /// <summary>
 /// Serializes an <see cref="OsuStoryboard"/> into the <c>.osb</c> format recognized by osu!
@@ -13,16 +15,16 @@ public class OsuStoryboardSerializer : ISerializer<OsuStoryboard>
         await writer.WriteLineAsync("//Background and video events");
 
         await writer.WriteLineAsync("//Storyboard Layer 0 (Background)");
-        await WriteObjects(storyboard.GetLayer(OsuStoryboardLayer.Background), writer);
-        
+        await WriteObjects(storyboard.GetLayer(StoryboardLayer.Background), writer);
+
         await writer.WriteLineAsync("//Storyboard Layer 1 (Fail)");
-        await WriteObjects(storyboard.GetLayer(OsuStoryboardLayer.Fail), writer);
-        
+        await WriteObjects(storyboard.GetLayer(StoryboardLayer.Fail), writer);
+
         await writer.WriteLineAsync("//Storyboard Layer 2 (Pass)");
-        await WriteObjects(storyboard.GetLayer(OsuStoryboardLayer.Pass), writer);
+        await WriteObjects(storyboard.GetLayer(StoryboardLayer.Pass), writer);
 
         await writer.WriteLineAsync("//Storyboard Layer 3 (Foreground)");
-        await WriteObjects(storyboard.GetLayer(OsuStoryboardLayer.Foreground), writer);
+        await WriteObjects(storyboard.GetLayer(StoryboardLayer.Foreground), writer);
 
         await writer.WriteLineAsync("//Storyboard Sound Samples");
     }
@@ -39,10 +41,10 @@ public class OsuStoryboardSerializer : ISerializer<OsuStoryboard>
     {
         var layer = obj.Layer switch
         {
-            OsuStoryboardLayer.Background => "Background",
-            OsuStoryboardLayer.Fail => "Fail",
-            OsuStoryboardLayer.Pass => "Pass",
-            OsuStoryboardLayer.Foreground => "Foreground",
+            StoryboardLayer.Background => "Background",
+            StoryboardLayer.Fail => "Fail",
+            StoryboardLayer.Pass => "Pass",
+            StoryboardLayer.Foreground => "Foreground",
             _ => throw new ArgumentException($"Unknown storyboard layer: {obj.Layer}")
         };
 
@@ -81,7 +83,7 @@ public class OsuStoryboardSerializer : ISerializer<OsuStoryboard>
 
     private string SerializeCommand(OsuStoryboardCommand command)
     {
-        var easing = (int) command.EasingFunction;
+        var easing = (int)command.EasingFunction;
         var (tag, args) = command switch
         {
             OsuStoryboardCommand.Fade fade => ("F", new object[] { fade.Opacity.StartValue, fade.Opacity.EndValue }),
@@ -95,10 +97,10 @@ public class OsuStoryboardSerializer : ISerializer<OsuStoryboard>
             OsuStoryboardCommand.MoveY move => ("MY", [move.Position.StartValue, move.Position.EndValue]),
             OsuStoryboardCommand.Scale scale => ("S", [scale.Scalar.StartValue, scale.Scalar.EndValue]),
             OsuStoryboardCommand.VectorScale scale => ("V", [
-                scale.Vector.StartValue.X,
-                scale.Vector.StartValue.Y,
-                scale.Vector.EndValue.X,
-                scale.Vector.EndValue.Y
+                scale.Scalars.StartValue.X,
+                scale.Scalars.StartValue.Y,
+                scale.Scalars.EndValue.X,
+                scale.Scalars.EndValue.Y
             ]),
             OsuStoryboardCommand.Rotate rotation => ("R", [rotation.Angle.StartValue, rotation.Angle.EndValue]),
             OsuStoryboardCommand.FlipHorizontally => ("P", ['H']),

@@ -1,7 +1,9 @@
-﻿namespace Oreru.Domain.Osu;
+﻿using Oreru.Domain;
+
+namespace Oreru.Osu;
 
 /// <summary>
-/// An individual command or transformation applied to an <see cref="Oreru.Domain.Osu.OsuStoryboardObject"/>.
+/// An individual command or transformation applied to an <see cref="OsuStoryboardObject"/>.
 /// </summary>
 public abstract class OsuStoryboardCommand
 {
@@ -35,7 +37,7 @@ public abstract class OsuStoryboardCommand
 
     public class VectorScale : OsuStoryboardCommand
     {
-        public required Interpolated<Vector2> Vector { get; set; }
+        public required Interpolated<Vector2> Scalars { get; set; }
     }
 
     public class Rotate : OsuStoryboardCommand

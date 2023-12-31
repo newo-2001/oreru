@@ -1,4 +1,4 @@
-﻿namespace Oreru.Domain.Osu;
+﻿namespace Oreru.Domain;
 public enum Origin
 {
     TopLeft,
