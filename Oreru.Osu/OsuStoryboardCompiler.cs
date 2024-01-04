@@ -17,31 +17,35 @@ public class OsuStoryboardCompiler
         return compiledStoryboard;
     }
 
-    private IEnumerable<OsuStoryboardObject> CompileEffect(IEffect effect)
+    private IEnumerable<OsuStoryboardObject> CompileEffect(Effect effect)
     {
-        return effect switch
+        var objects = effect.Objects.Select(obj => new OsuStoryboardObject
         {
-            StoryboardObject obj => [
-                new OsuStoryboardObject
-                {
-                    Commands = obj.Commands.SelectMany(CompileCommand).ToList(),
-                    FilePath = obj.ImagePath,
-                    InitialPosition = obj.InitialPosition,
-                    Layer = obj.Layer,
-                    Origin = obj.Origin,
-                }
-            ],
-            EffectGroup group => CompileEffectGroup(group),
-            _ => throw new InvalidOperationException("Encountered unknown effect type")
-        };
+            FilePath = obj.ImagePath,
+            InitialPosition = obj.InitialPosition,
+            Layer = obj.Layer,
+            Origin = obj.Origin,
+        }).Concat(effect.Children.SelectMany(CompileEffect))
+            .ToList();
+
+        // Flatten the inherited transformations from the parent
+        foreach (var child in objects)
+        {
+            // This does not actually do what is intended.
+            // i.e. when multiple move commands overlap,
+            // their offsets should be merged.
+            child.Commands.AddRange(effect.Commands.SelectMany(CompileCommand));
+        }
+
+        return objects;
     }
 
-    private IEnumerable<OsuStoryboardCommand> CompileCommand(ICommand command)
+    private IEnumerable<OsuStoryboardCommand> CompileCommand(Command command)
     {
         return command switch
         {
-            ICompositeCommand composite => composite.Children.SelectMany(CompileCommand),
-            PrimitiveCommand primitive => [
+            Command.Composite(var composite) => composite.Children.SelectMany(CompileCommand),
+            Command.Primitive(var primitive) => [
                 primitive switch
                 {
                     PrimitiveCommand.Fade fade => new OsuStoryboardCommand.Fade
@@ -94,22 +98,5 @@ public class OsuStoryboardCompiler
             ],
             _ => throw new InvalidOperationException("Encounted unknown command type")
         };
-    }
-
-    private IEnumerable<OsuStoryboardObject> CompileEffectGroup(EffectGroup group)
-    {
-        var children = group.Children.SelectMany(CompileEffect).ToList();
-        var commands = group.Commands.SelectMany(CompileCommand).ToList();
-
-        // Flatten the inherited transformations from the parent
-        foreach (var child in children)
-        {
-            // This does not actually do what is inteded.
-            // i.e. when multiple move commands overlap,
-            // their offsets should be merged.
-            child.Commands.AddRange(commands);
-        }
-
-        return children;
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Oreru.Domain.Storyboards;
+﻿using Oreru.Domain.Containers;
+
+namespace Oreru.Domain.Storyboards;
 
 /// <summary>
 /// A storyboard stored the way oreru! sees it.
@@ -6,5 +8,5 @@
 /// </summary>
 public class Storyboard
 {
-    public List<IEffect> Effects { get; set; } = [];
+    public Timeline<Effect> Effects { get; init; } = [];
 }
