@@ -13,7 +13,13 @@ public class SortedList<T> : ICollection<T>
 
     public SortedList(IComparer<T> comparer) => _comparer = comparer;
 
-    public void Add(T item) => _items.Insert(_items.BinarySearch(item), item);
+    public void Add(T item)
+    {
+        var index = _items.BinarySearch(item);
+        if (index < 0) index = ~index;
+
+        _items.Insert(index, item);
+    }
 
     public void AddRange(IEnumerable<T> items)
     {

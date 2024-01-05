@@ -9,8 +9,8 @@ namespace Oreru.Domain.Storyboards;
 /// </summary>
 public class Effect : ITemporal
 {
-    public Timeline<Command> Commands { get; init; } = [];
-    public Timeline<Effect> Children { get; init; } = [];
     public List<StoryboardObject> Objects { get; init; } = [];
+    public Timeline<StoryboardCommand> Commands { get; init; } = [];
+    public Timeline<Effect> Children { get; init; } = [];
     public Interval Interval => Interval.Super(Commands.Interval, Children.Interval);
 }

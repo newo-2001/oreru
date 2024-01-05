@@ -2,32 +2,31 @@
 using Oreru.Domain.Storyboards;
 using Oreru.Osu;
 
-var root = new EffectGroup
+var root = new Effect
 {
+    Objects = [
+        new StoryboardObject
+        {
+            ImagePath = "foo.jpg",
+            InitialPosition = new Vector2(0, 0),
+        }
+    ],
     Commands = [
-        new PrimitiveCommand.Move
+        new StoryboardCommand.Move(new(new Vector2(-3, 7), new Vector2(-200, 700)))
         {
             Interval = new Interval
             {
                 StartTime = TimeSpan.FromMilliseconds(5000),
                 EndTime = TimeSpan.FromMilliseconds(7000),
-            },
-            Position = new Interpolated<Vector2>
-            {
-                StartValue = new Vector2(-3, 7),
-                EndValue = new Vector2(-200, 700)
             }
-        },
+        }
     ],
     Children = [
-        new StoryboardObject
+        new Effect
         {
-            ImagePath = "test.png",
-            InitialPosition = new Vector2(250, 600),
             Commands = [
-                new PrimitiveCommand.Flip
+                new StoryboardCommand.Flip(Axis.Horizontal)
                 {
-                    Axis = Axis.Horizontal,
                     Interval = new Interval
                     {
                         StartTime = TimeSpan.FromMilliseconds(300),
@@ -35,12 +34,14 @@ var root = new EffectGroup
                     }
                 }
             ],
+            Objects = [
+                new StoryboardObject
+                {
+                    ImagePath = "test.png",
+                    InitialPosition = new Vector2(250, 600),
+                },
+            ]
         },
-        new StoryboardObject
-        {
-            ImagePath = "foo.jpg",
-            InitialPosition = new Vector2(0, 0),
-        }
     ]
 };
 

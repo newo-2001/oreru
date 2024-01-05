@@ -1,4 +1,5 @@
 ﻿using Oreru.Domain;
+using Oreru.Domain.Containers;
 using Oreru.Domain.Storyboards;
 
 namespace Oreru.Osu;
@@ -13,5 +14,5 @@ public class OsuStoryboardObject
     public required string FilePath { get; set; }
     public required Origin Origin { get; set; }
     public required Vector2 InitialPosition { get; set; }
-    public List<OsuStoryboardCommand> Commands { get; set; } = [];
+    public Timeline<StoryboardCommand> Commands { get; set; } = [];
 }

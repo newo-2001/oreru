@@ -81,31 +81,31 @@ public class OsuStoryboardSerializer : ISerializer<OsuStoryboard>
         }
     }
 
-    private string SerializeCommand(OsuStoryboardCommand command)
+    private string SerializeCommand(StoryboardCommand command)
     {
         var easing = (int)command.EasingFunction;
         var (tag, args) = command switch
         {
-            OsuStoryboardCommand.Fade fade => ("F", new object[] { fade.Opacity.StartValue, fade.Opacity.EndValue }),
-            OsuStoryboardCommand.Move move => ("M", [
+            StoryboardCommand.Fade fade => ("F", new object[] { fade.Opacity.StartValue, fade.Opacity.EndValue }),
+            StoryboardCommand.Move move => ("M", [
                 move.Position.StartValue.X,
                 move.Position.StartValue.Y,
                 move.Position.EndValue.X,
                 move.Position.EndValue.Y
             ]),
-            OsuStoryboardCommand.MoveX move => ("MX", [move.Position.StartValue, move.Position.EndValue]),
-            OsuStoryboardCommand.MoveY move => ("MY", [move.Position.StartValue, move.Position.EndValue]),
-            OsuStoryboardCommand.Scale scale => ("S", [scale.Scalar.StartValue, scale.Scalar.EndValue]),
-            OsuStoryboardCommand.VectorScale scale => ("V", [
+            StoryboardCommand.MoveX move => ("MX", [move.Position.StartValue, move.Position.EndValue]),
+            StoryboardCommand.MoveY move => ("MY", [move.Position.StartValue, move.Position.EndValue]),
+            StoryboardCommand.Scale scale => ("S", [scale.Scalar.StartValue, scale.Scalar.EndValue]),
+            StoryboardCommand.VectorScale scale => ("V", [
                 scale.Scalars.StartValue.X,
                 scale.Scalars.StartValue.Y,
                 scale.Scalars.EndValue.X,
                 scale.Scalars.EndValue.Y
             ]),
-            OsuStoryboardCommand.Rotate rotation => ("R", [rotation.Angle.StartValue, rotation.Angle.EndValue]),
-            OsuStoryboardCommand.FlipHorizontally => ("P", ['H']),
-            OsuStoryboardCommand.FlipVertically => ("P", ['V']),
-            OsuStoryboardCommand.UseAdditiveColorBlending => ("P", ['A']),
+            StoryboardCommand.Rotate rotation => ("R", [rotation.Angle.StartValue, rotation.Angle.EndValue]),
+            StoryboardCommand.Flip(Axis.Horizontal) => ("P", ['H']),
+            StoryboardCommand.Flip(Axis.Vertical) => ("P", ['V']),
+            StoryboardCommand.UseAdditiveBlending => ("P", ['A']),
             _ => throw new ArgumentException("Unknown command")
         };
 

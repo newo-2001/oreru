@@ -32,7 +32,7 @@ public struct Interval : IComparable<Interval>
 
     public readonly int CompareTo(Interval other)
     {
-        var order = StartTime.CompareTo(other);
+        var order = StartTime.CompareTo(other.StartTime);
         return order != 0 ? order : other.EndTime.CompareTo(EndTime);
     }
     
