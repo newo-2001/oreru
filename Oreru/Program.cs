@@ -8,37 +8,23 @@ var root = new Effect
         new StoryboardObject
         {
             ImagePath = "foo.jpg",
-            InitialPosition = new Vector2(0, 0),
+            InitialPosition = (0, 0),
         }
     ],
     Commands = [
-        new StoryboardCommand.Move(new(new Vector2(-3, 7), new Vector2(-200, 700)))
-        {
-            Interval = new Interval
-            {
-                StartTime = TimeSpan.FromMilliseconds(5000),
-                EndTime = TimeSpan.FromMilliseconds(7000),
-            }
-        }
+        new StoryboardCommand.Move(new Interval(TimeSpan.FromMilliseconds(5000), TimeSpan.FromMilliseconds(7000)), (-3, 7))
     ],
     Children = [
         new Effect
         {
             Commands = [
-                new StoryboardCommand.Flip(Axis.Horizontal)
-                {
-                    Interval = new Interval
-                    {
-                        StartTime = TimeSpan.FromMilliseconds(300),
-                        EndTime = TimeSpan.FromMilliseconds(400)
-                    }
-                }
+                new StoryboardCommand.Flip(new Interval(TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(400)), Axis.Horizontal)
             ],
             Objects = [
                 new StoryboardObject
                 {
                     ImagePath = "test.png",
-                    InitialPosition = new Vector2(250, 600),
+                    InitialPosition = (250, 600),
                 },
             ]
         },

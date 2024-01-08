@@ -1,6 +1,5 @@
 ﻿namespace Oreru.Osu;
 
-using Oreru.Domain;
 using Oreru.Domain.Storyboards;
 
 /// <summary>
@@ -11,13 +10,13 @@ public class OsuStoryboardCompiler
 {
     public OsuStoryboard Compile(Storyboard storyboard)
     {
-        var compiledStoryboard = new OsuStoryboard();
-        compiledStoryboard.AddObjects(storyboard.Effects.SelectMany(CompileEffect));
-
-        return compiledStoryboard;
+        return new OsuStoryboard
+        {
+            Objects = [..storyboard.Effects.SelectMany(CompileEffect)]
+        };
     }
 
-    private IEnumerable<OsuStoryboardObject> CompileEffect(Effect effect)
+    private static IEnumerable<OsuStoryboardObject> CompileEffect(Effect effect)
     {
         var objects = effect.Objects.Select(obj => new OsuStoryboardObject
         {
@@ -34,9 +33,30 @@ public class OsuStoryboardCompiler
             // This does not actually do what is intended.
             // i.e. when multiple move commands overlap,
             // their offsets should be merged.
-            child.Commands.AddRange(effect.Commands);
+            var state = new OsuStoryboardObjectState(child);
+            child.Commands.AddRange(effect.Commands.Select(command => CompileCommand(command, state)));
         }
 
         return objects;
+    }
+
+    private static OsuStoryboardCommand CompileCommand(StoryboardCommand command, OsuStoryboardObjectState state)
+    {
+        OsuStoryboardCommand compiled = command switch
+        {
+            StoryboardCommand.Move(var interval, var offset) => new OsuStoryboardCommand.Move(interval, new(state.Position, state.Position + offset)),
+            StoryboardCommand.Fade(var interval, var multiplier) => new OsuStoryboardCommand.Fade(interval, new(state.Opacity, state.Opacity * multiplier)),
+            StoryboardCommand.Scale(var interval, var (x, y)) => new OsuStoryboardCommand.VectorScale(interval, new(state.ScalingFactor, (state.ScalingFactor.X * x, state.ScalingFactor.Y * y))),
+            StoryboardCommand.Rotate(var interval, var angle) => new OsuStoryboardCommand.Rotate(interval, new(state.Angle, state.Angle + angle)),
+            StoryboardCommand.ChangeColor(var interval,var color) => new OsuStoryboardCommand.ChangeColor(interval, new(state.Color, color)),
+            StoryboardCommand.Flip(var interval, var axis) => new OsuStoryboardCommand.Flip(interval, axis),
+            StoryboardCommand.UseAdditiveBlending(var interval) => new OsuStoryboardCommand.UseAdditiveBlending(interval),
+            _ => throw new ArgumentException("Unknown command encountered")
+        };
+
+        state.Apply(command);
+        
+        compiled.EasingFunction = command.EasingFunction;
+        return compiled;
     }
 }

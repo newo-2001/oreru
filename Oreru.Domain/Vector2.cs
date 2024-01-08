@@ -19,6 +19,8 @@ public record Vector2(double X, double Y) :
     public static readonly Vector2 Zero = new Vector2(0, 0);
     public static Vector2 AdditiveIdentity => Zero;
 
+    public static implicit operator Vector2((double, double) values) => new Vector2(values.Item1, values.Item2);
+
     public static Vector2 operator +(Vector2 left, Vector2 right)
     {
         return new Vector2(left.X + right.X, left.Y + right.Y);

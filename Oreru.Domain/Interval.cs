@@ -47,5 +47,5 @@ public struct Interval : IComparable<Interval>
     };
 
     /// <inheritdoc cref="Super(IEnumerable{Interval})"/>
-    public static Interval Super(params Interval[] intervals) => Super(intervals);
+    public static Interval Super(params Interval[] intervals) => Super(intervals.AsEnumerable());
 }

@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oreru", "Oreru\Oreru.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oreru.Domain", "Oreru.Domain\Oreru.Domain.csproj", "{80304438-271F-4FA8-B17B-31F43FEF76D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oreru.Osu", "Oreru.Osu\Oreru.Osu.csproj", "{E457874B-0506-42FB-9DAF-3EC87A25384D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oreru.Osu", "Oreru.Osu\Oreru.Osu.csproj", "{E457874B-0506-42FB-9DAF-3EC87A25384D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oreru.Osu.Tests", "Oreru.Osu.Tests\Oreru.Osu.Tests.csproj", "{D6F0F3DF-01F0-42A5-8E10-CDA93210398E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{E457874B-0506-42FB-9DAF-3EC87A25384D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E457874B-0506-42FB-9DAF-3EC87A25384D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E457874B-0506-42FB-9DAF-3EC87A25384D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6F0F3DF-01F0-42A5-8E10-CDA93210398E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6F0F3DF-01F0-42A5-8E10-CDA93210398E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6F0F3DF-01F0-42A5-8E10-CDA93210398E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6F0F3DF-01F0-42A5-8E10-CDA93210398E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
